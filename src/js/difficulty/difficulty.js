@@ -1,34 +1,47 @@
-import cardsDataBlue from '../../assets/data/mythicCards/blue';
-import cardsDataBrown from '../../assets/data/mythicCards/brown';
-import cardsDataGreen from '../../assets/data/mythicCards/green';
-
 export class Difficulty {
-    constructor() {
-        this.difficulty = document.querySelector('.difficulty-container');
-        this.cardsDataBlue = cardsDataBlue;
-        this.cardsDataBrown = cardsDataBrown;
-        this.cardsDataGreen = cardsDataGreen;
+    EASY = 'easy'
+    NORMAL = 'normal'
+    HARD = 'hard'
+
+    constructor() {}
+
+    diffСondition(difficulty, blue, brown, green) {
+        let newBlue = [];
+        let newBrown = [];
+        let newGreen = [];
+
+        if (difficulty === this.EASY) {
+            newBlue = blue.filter(item => item.difficulty !== this.HARD);
+            newBrown = brown.filter(item => item.difficulty !== this.HARD);
+            newGreen = green.filter(item => item.difficulty !== this.HARD);
+        }
+
+        if (difficulty === this.NORMAL) {
+            return [blue, brown, green];
+        }
+
+        if (difficulty === this.HARD) {
+            newBlue = blue.filter(item => item.difficulty !== this.EASY);
+            newBrown = brown.filter(item => item.difficulty !== this.EASY);
+            newGreen = green.filter(item => item.difficulty !== this.EASY);
+        }
+
+        return [newBlue, newBrown, newGreen];
     }
 
-    diffСondition(Blue,Brown,Green) {
-        this.difficulty.addEventListener('click', () => {
-            if (this.difficulty.innerText == 'Низкая') {
-                Blue = this.cardsDataBlue.filter(item => item.difficulty !== 'hard');
-                Brown = this.cardsDataBrown.filter(item => item.difficulty !== 'hard');
-                Green = this.cardsDataGreen.filter(item => item.difficulty !== 'hard');
-                console.log(Blue);
-            }
-        });
-    }
+    getRandomColor = (stepCounts) => {
+        if (!stepCounts.filter((item) => !!item).length) {
+            return [null, stepCounts];
+        }
 
+        const counts = [...stepCounts];
+        const random = Math.floor(Math.random() * counts.length);
 
-    // GetMissing() {
-    //     if(this.cardsBlue.length !== 2) {
+        if (counts[random]) {
+            counts[random] = counts[random] - 1;
+            return [random, counts];
+        }
 
-    //     }
-    // }
-
-    init = () => {
-        this.diffСondition()
+        return this.getRandomColor(stepCounts);
     }
 }
